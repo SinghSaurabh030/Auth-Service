@@ -24,6 +24,28 @@ const create=async (req,res)=> {
         });
     } 
 }
+const signIn=async (req,res)=>{
+    try {
+        const response=await userService.signIn({
+            email:req.body.email,
+            password:req.body.password
+        });
+        return res.status(201).json({
+            success:true,
+            message: 'succesfully logged a user',
+            data: response,
+            err:{}
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message: 'unable to login',
+            data: {},
+            err: error
+        });
+    }
+}
 module.exports={
-    create 
+    create,
+    signIn
 }

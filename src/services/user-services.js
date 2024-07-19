@@ -1,6 +1,7 @@
 const UserRepository=require('../respository/user-repository');
 const jwt = require('jsonwebtoken');
 const {AUTH_KEY}=require('../config/serverConfig');
+const bcrypt = require('bcrypt');
 
 class UserService{
     constructor(){
@@ -24,6 +25,25 @@ class UserService{
             throw error;
         }
     }
+    async signIn(data){
+        try {
+            const userData=await this.userRepository.getByEmail(data.email);
+            const passStatus=await bcrypt.compare(data.password,userData.password); 
+            if(!passStatus){
+                console.log('password not matching');
+                throw {message: 'password not matching'};
+            }
+            const token=this.createToken({
+                data
+            });
+            return token;
+        } catch (error) {
+            console.log('something went wrong while signing in');
+            throw error;
+        }
+    }
+
+
      createToken(data){
         try {
             const jwtToken= jwt.sign({
@@ -49,6 +69,7 @@ class UserService{
             throw error;
         }
     }
+
 
     
 }
