@@ -88,6 +88,14 @@ class UserService{
             throw error;
         }
     }
+    async isAdmin(userId){
+        try {
+            return this.userRepository.isAdmin(userId);
+        } catch (error) {
+            console.log('something went wrong checking admin role in service layer');
+            throw error;
+        }
+    }
 
 
     

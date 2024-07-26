@@ -18,10 +18,7 @@ const setupAndStartServer=async ()=>{
         // if(DB_SYNC){
         //     db.sequelize.sync({alter : true});
         // }
-        const u1=await db.user.findByPk(10);
-        const r1=await db.role.findByPk(3);
-       // u1.addRole(r1);
-       console.log( await u1.hasRole(r1));
+        
         
     })
 }
