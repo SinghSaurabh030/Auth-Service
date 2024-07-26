@@ -34,7 +34,7 @@ class UserService{
                 throw {message: 'password not matching'};
             }
             const token=this.createToken({
-                data
+                email : data.email
             });
             return token;
         } catch (error) {
@@ -53,19 +53,38 @@ class UserService{
             AUTH_KEY
             ,{
                 expiresIn: '1d'
-            });
+            }); 
             return jwtToken;
         } catch (error) {
             console.log('something went wrong while creating token');
             throw error;
         }
     }
-     verifyToken(token){
+        verifyToken(token){
         try {
-            const response=jwt.verify(token,AUTH_KEY);
+            console.log(token);
+            const response=  jwt.verify(token,AUTH_KEY);
+            console.log(response);
             return response;
         } catch (error) {
             console.log('something went wrong while verifying token');
+            throw error;
+        }
+    }
+    async isAuthenticated(token){
+        try {
+            const response= this.verifyToken(token);    
+            if(!response){
+                throw {err: 'invalid token sent'};
+            }
+            const user=await this.userRepository.getByEmail(response.email);
+            if(!user){
+                throw {err : 'no user with corresponding token'};
+            }
+            return user.id;
+            return response;
+        } catch (error) {
+            console.log('something went wrong while authenticating token');
             throw error;
         }
     }
